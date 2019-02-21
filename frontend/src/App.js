@@ -115,21 +115,19 @@ class App extends Component {
     }
   },
   skills: [{
-      skill: {
-        elementType: 'input',
-        elementConfig: {
-            type: 'text',
-            placeholder: 'Your skills'
-        },
-        value: '',
-        id: '0',
-        validation: {
-            isRequired: true
-        },
-        valid: false,
-        touched: false
-      },
-    }],
+    elementType: 'input',
+    elementConfig: {
+        type: 'text',
+        placeholder: 'Your skills'
+    },
+    value: '',
+    id: '0',
+    validation: {
+        isRequired: true
+    },
+    valid: false,
+    touched: false
+  }],
     educations: [{
       education: {
         elementType: 'text',
@@ -181,7 +179,8 @@ class App extends Component {
         touched: false
       },
     }],
-    flash: ""
+    flash: "",
+    token: null
   }
 
   onChangeHandler=(event, id)=>{
@@ -192,12 +191,13 @@ class App extends Component {
     this.setState({ personalInfo: info });
   }
 
-  onChangeSkillHandler(event, id){
-    const info = [...this.state.skills];
+  onChangeSkillHandler(detailsInfo ,event, id){
+    const info = [...this.state[detailsInfo]];
+    // console.log(info);
 
     let changedInfo = info.map((s)=>{
-      if(s.skill.id===id){
-        s.skill.value = event.target.value;
+      if(s.id===id){
+        s.value = event.target.value;
       }
       return s;
     })
@@ -208,8 +208,8 @@ class App extends Component {
   addHandler=(numSkills)=>{
     const info = [...this.state.skills];
     console.log(numSkills);
-    info.push({
-      skill: {
+    info.push(
+      {
         elementType: 'input',
         elementConfig: {
             type: 'text',
@@ -223,7 +223,7 @@ class App extends Component {
         valid: false,
         touched: false
       }
-    })
+    )
     this.setState({skills: info});
   }
 
@@ -308,11 +308,9 @@ class App extends Component {
       
       console.log(info);
     this.setState({projects: info});
-    // console.log('sfd');
   }
 
   addExtrasHandler=(num)=>{
-    // console.log(num);
     const info = [...this.state.extras];
     info.push({
       extra: {
@@ -367,7 +365,6 @@ class App extends Component {
 
 
     onChangeAuthHandler=(event, controlName)=>{
-      // console.log(this.state.controls[controlName].validation);
       const updatedControls={
         ...this.state.controls,
       [controlName]: {
@@ -381,7 +378,6 @@ class App extends Component {
     }
 
     onChangeSignupHandler=(event, controlName)=>{
-      // console.log(this.state.controls[controlName].validation);
       const updatedControls={
         ...this.state.controlSignUp,
       [controlName]: {
@@ -391,7 +387,6 @@ class App extends Component {
           touched: true
       }
     }
-    // console.log(updatedControls);
       this.setState({controlSignUp: updatedControls});
     }
 
@@ -399,11 +394,6 @@ class App extends Component {
       event.preventDefault();
       let email = this.state.controls.email.value;
       let password = this.state.controls.password.value;
-      // console.log(controls);
-      // localStorage.setItem('email', email);
-      // localStorage.setItem('password', password);
-
-      console.log(email, password);
 
       axios.post(url+"/api/signin", {
         username: email,
@@ -411,11 +401,12 @@ class App extends Component {
       })
         .then(res=>{
           if(res.data.token){
+            this.setState({ token: res.data.token });
             this.props.history.push({
               pathname: '/personalInfo',
+              search: '?token='+res.data.token
             });
           }
-          console.log(res);
         })
         .catch(err=>{
           this.props.history.push('/err');
@@ -427,14 +418,12 @@ class App extends Component {
       let email = this.state.controlSignUp.email.value;
       let password = this.state.controlSignUp.password.value;
 
-      // console.log(email, password);
 
       axios.post(url+"/api/signup", {
         username: email,
         password: password
       })
         .then(res=>{
-          console.log(res);
           this.setState({flash: "User Created Please Sign In"});
           this.props.history.push({
             pathname: '/',
@@ -443,11 +432,9 @@ class App extends Component {
         .catch(err=>{
           this.props.history.push('/err');
         });
-      // console.log("sdjfh");
     }
 
   render() {
-    // console.log(this.props);
     const personalData = [];
     for(let key in this.state.personalInfo){
       
@@ -508,23 +495,16 @@ class App extends Component {
             return <Error />
           }} />
 
-        {/* <Route path="/sign/signup" exact render={()=>{
-            return <Signup
-            controls={this.state.controls}
-            changed = {(event, controlName)=>this.onChangeAuthHandler(event, controlName)}
-            auth = {(event)=>this.authHandler(event)}
-            />
-          }} /> */}
-
           <Route path="/personalInfo" exact render={()=>{
             return <PersonalInfo
             personalData={personalData}
-            changed = {(event, id)=>this.onChangeHandler(event, id)}/>
+            changed = {(event, id)=>this.onChangeHandler(event, id)}
+            token={this.state.token}/>
           }} />
           <Route path="/skills" exact render={()=>{
             return <Skills
             skills={this.state.skills}
-            changed = {(event, id)=>this.onChangeSkillHandler(event, id)}
+            changed = {(detailsInfo ,event, id)=>this.onChangeSkillHandler(detailsInfo ,event, id)}
             add={(num)=>this.addHandler(num)}/>
           }} />
 

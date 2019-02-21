@@ -5,9 +5,9 @@ class Preview extends Component {
     render(){
         let skills = this.props.skills.map((s)=>{
             return (
-            <div className="skill-container main-desc" key={s.skill.id}>
-                    <span className="skill-text" >{s.skill.value}</span>
-                {s.skill.value?<button className="btn-delete" onClick={()=>this.props.delete(this.props.skills.indexOf(s), "skills")} >delete</button>:null}
+            <div className="skill-container main-desc" key={s.id}>
+                    <span className="skill-text" >{s.value}</span>
+                {s.value?<button className="btn-delete" onClick={()=>this.props.delete(this.props.skills.indexOf(s), "skills")} >delete</button>:null}
             </div>
             );
         })

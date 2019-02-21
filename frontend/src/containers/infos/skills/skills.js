@@ -13,24 +13,22 @@ class skills extends Component{
 
     addNum=()=>{
         let num = this.state.num_skills+1;
-        // console.log(num);
         this.setState({ num_skills: num });
         this.props.add(num);
     }
 
     render(){
         let skills = [...this.props.skills];
-        console.log(this.props.skills);
         let input = skills.map((s)=>{
             return <Input
             key={skills.indexOf(s)}
-            elementType={s.skill.elementConfig.elementType}
-            elementConfig={s.skill.elementConfig}
-            value={s.skill.value}
-            invalid={!s.skill.valid}
-            touched={s.skill.touched}
-            shouldValidate={s.skill.validation}
-            changed={(event)=>this.props.changed(event, s.skill.id)} />
+            elementType={s.elementConfig.elementType}
+            elementConfig={s.elementConfig}
+            value={s.value}
+            invalid={!s.valid}
+            touched={s.touched}
+            shouldValidate={s.validation}
+            changed={(event)=>this.props.changed('skills' ,event, s.id)} />
         })
         return (
             <div className="box">
