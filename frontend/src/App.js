@@ -229,9 +229,7 @@ class App extends Component {
 
   deleteHandler=(index, property)=>{
     const info = [...this.state[property]];
-    // console.log(info);
     info.splice(index, 1);
-    // console.log(info);
 
     this.setState({ [property]: info });
   }
