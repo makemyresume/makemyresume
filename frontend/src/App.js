@@ -11,7 +11,7 @@ import Auth from './containers/Auth/auth';
 import axios from 'axios';
 import Print from './components/print/print';
 import Error from './UI/error/error';
-var url ="http://localhost:5000";
+var url ="https://resumemaker2.herokuapp.com";
 class App extends Component {
 
   state={
