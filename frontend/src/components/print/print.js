@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import './print.css';
 // import Preview from '../preview/preview';
 class Print extends Component {
-
-    render(){
+    render() {
         let skills = this.props.skills.map((s)=>{
+            // console.log(s);
             return (
-            <div className="skill-container main-desc" key={s.skill.id}>
-                    <span className="skill-text" >{s.skill.value}</span>
+            <div className="skill-container main-desc" key={s.id}>
+                    <span className="skill-text" >{s.value}</span>
             </div>
             );
         })
